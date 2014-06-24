@@ -113,14 +113,17 @@ public class Analysis {
 			List<String> noDamage = weaknesses.get(0);
 			List<String> quarterDamage = weaknesses.get(1);
 			List<String> halfDamage = weaknesses.get(2);
-			List<String> doubleDamage = weaknesses.get(3);
-			List<String> quadrupleDamage = weaknesses.get(4);
+			List<String> normalDamage = weaknesses.get(3);
+			List<String> doubleDamage = weaknesses.get(4);
+			List<String> quadrupleDamage = weaknesses.get(5);
 			if (noDamage.size() > 0)
 				result += " 0x   - " + noDamage + "\n";
 			if (quarterDamage.size() > 0)
 				result += " 1/4x - " + quarterDamage + "\n";
 			if (halfDamage.size() > 0)
 				result += " 1/2x - " + halfDamage + "\n";
+			if (normalDamage.size() > 0)
+				result += " 1x   - " + normalDamage + "\n";
 			if (doubleDamage.size() > 0)
 				result += " 2x   - " + doubleDamage + "\n";
 			if (quadrupleDamage.size() > 0)
@@ -153,12 +156,12 @@ public class Analysis {
 	private List<Map<String,Integer>> findTeamWeaknesses(List<String> pokemons) {
 		//
 		List<Map<String, Integer>> damageCounts = new ArrayList<Map<String, Integer>>();
-		for (int i = 0; i < 5; i++) {
+		for (int i = 0; i < 6; i++) {
 			damageCounts.add(new HashMap<String, Integer>());
 		}
 		for (String pokemon : pokemons) {
 			List<List<String>> weaknesses = findWeaknesses(pokemon);
-			for (int i = 0; i < 5; i++) {
+			for (int i = 0; i < 6; i++) {
 				List<String> someDamage = weaknesses.get(i);
 				Map<String, Integer> damageCount = damageCounts.get(i);
 				for (String type : someDamage) {
@@ -173,7 +176,7 @@ public class Analysis {
 		}
 		Map<String, Integer> resistanceCount = new HashMap<String, Integer>();
 		Map<String, Integer> weaknessCount = new HashMap<String, Integer>();
-		for (int i = 0; i < 5; i++) {
+		for (int i = 0; i < 6; i++) {
 			if (i < 3) {
 				Iterator<Entry<String, Integer>> someResistanceCount = damageCounts
 						.get(i).entrySet().iterator();
@@ -186,7 +189,7 @@ public class Analysis {
 							+ specificCount;
 					resistanceCount.put(type, count);
 				}
-			} else {
+			} else if (i > 3) {
 				Iterator<Entry<String, Integer>> someWeaknessCount = damageCounts
 						.get(i).entrySet().iterator();
 				while (someWeaknessCount.hasNext()) {
@@ -213,6 +216,7 @@ public class Analysis {
 		List<String> noDamage = new ArrayList<String>();
 		List<String> quarterDamage = new ArrayList<String>();
 		List<String> halfDamage = new ArrayList<String>();
+		List<String> normalDamage = new ArrayList<String>();
 		List<String> doubleDamage = new ArrayList<String>();
 		List<String> quadrupleDamage = new ArrayList<String>();
 		String type1 = data.getType1(pokemon);
@@ -229,10 +233,12 @@ public class Analysis {
 		if (type2.equals("")) {
 			noDamage = defendingTAT1.get(0);
 			halfDamage = defendingTAT1.get(1);
-			doubleDamage = defendingTAT1.get(2);
+			normalDamage = defendingTAT1.get(2);
+			doubleDamage = defendingTAT1.get(3);
 			weaknesses.add(noDamage);
 			weaknesses.add(quarterDamage);
 			weaknesses.add(halfDamage);
+			weaknesses.add(normalDamage);
 			weaknesses.add(doubleDamage);
 			weaknesses.add(quadrupleDamage);
 			return weaknesses;
@@ -244,47 +250,50 @@ public class Analysis {
 		List<String> noDamageToT2 = defendingTAT2.get(0);
 		List<String> halfDamageToT1 = defendingTAT1.get(1);
 		List<String> halfDamageToT2 = defendingTAT2.get(1);
-		List<String> doubleDamageToT1 = defendingTAT1.get(2);
-		List<String> doubleDamageToT2 = defendingTAT2.get(2);
+		List<String> normalDamageToT1 = defendingTAT1.get(2);
+		List<String> normalDamageToT2 = defendingTAT2.get(2);
+		List<String> doubleDamageToT1 = defendingTAT1.get(3);
+		List<String> doubleDamageToT2 = defendingTAT2.get(3);
 		noDamage.addAll(noDamageToT1);
 		noDamage.addAll(noDamageToT2);
 		for (String type : halfDamageToT1) {
 			if (halfDamageToT2.contains(type)) {
 				quarterDamage.add(type);
 			}
-		}
-		for (String type : halfDamageToT1) {
-			if (!noDamageToT2.contains(type) && !halfDamageToT2.contains(type)
-					&& !doubleDamageToT2.contains(type)) {
+			else if (normalDamageToT2.contains(type)) {
 				halfDamage.add(type);
 			}
+			else if (doubleDamageToT2.contains(type)) {
+				normalDamage.add(type);
+			}
 		}
-		for (String type : halfDamageToT2) {
-			if (!noDamageToT1.contains(type) && !halfDamageToT1.contains(type)
-					&& !doubleDamageToT1.contains(type)) {
+		for (String type : normalDamageToT1) {
+			if (halfDamageToT2.contains(type)) {
 				halfDamage.add(type);
 			}
-		}
-		for (String type : doubleDamageToT1) {
-			if (!noDamageToT2.contains(type) && !halfDamageToT2.contains(type)
-					&& !doubleDamageToT2.contains(type)) {
-				doubleDamage.add(type);
+			else if (normalDamageToT2.contains(type)) {
+				normalDamage.add(type);
 			}
-		}
-		for (String type : doubleDamageToT2) {
-			if (!noDamageToT1.contains(type) && !halfDamageToT1.contains(type)
-					&& !doubleDamageToT1.contains(type)) {
+			else if (doubleDamageToT2.contains(type)) {
 				doubleDamage.add(type);
 			}
 		}
 		for (String type : doubleDamageToT1) {
-			if (doubleDamageToT2.contains(type)) {
+			if (halfDamageToT2.contains(type)) {
+				normalDamage.add(type);
+			}
+			else if (normalDamageToT2.contains(type)) {
+				doubleDamage.add(type);
+			}
+			else if (doubleDamageToT2.contains(type)) {
 				quadrupleDamage.add(type);
 			}
 		}
+
 		weaknesses.add(noDamage);
 		weaknesses.add(quarterDamage);
 		weaknesses.add(halfDamage);
+		weaknesses.add(normalDamage);
 		weaknesses.add(doubleDamage);
 		weaknesses.add(quadrupleDamage);
 		return weaknesses;
@@ -294,12 +303,12 @@ public class Analysis {
 
 	public static void main(String[] args) throws IOException {
 		Analysis analysis = new Analysis();
-		analysis.printWeaknesses("primeape");
+		analysis.printWeaknesses("gliscor");
 		List<String> attackAdvantages = new ArrayList<String>();
-		attackAdvantages.add("fighting");
-		attackAdvantages.add("rock");
-		attackAdvantages.add("ground");
-		attackAdvantages.add("bug");
+		attackAdvantages.add("ghost");
+		attackAdvantages.add("grass");
+		attackAdvantages.add("fire");
+//		attackAdvantages.add("bug");
 		analysis.printAttackAdvantages(attackAdvantages);
 		List<String> team = new ArrayList<String>();
 		team.add("landorus (therian forme)");

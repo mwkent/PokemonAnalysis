@@ -7,13 +7,13 @@
 <title>Pokemon Analysis</title>
 </head>
 <body>
-	<h3>Choose the pokemon on your team</h3>
+	<h3>Submit a pokemon to see its weaknesses</h3>
 	
 	<form name="frm" method="get" action="analysisInput.jsp">
 		<table width="100%" border="0" cellspacing="0" cellpadding="0">
 			<tr>
-				<td width="22%">&nbsp;</td>
-				<td width="78%">&nbsp;</td>
+				<td width="18%">&nbsp;</td>
+				<td width="82%">&nbsp;</td>
 			</tr>
 			<tr>
 				<td>Pokemon Name</td>
