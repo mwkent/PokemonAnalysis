@@ -9,7 +9,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-class Emitter {
+public class Emitter {
 	private PrintWriter printer;
 
 	public Emitter(File file) {

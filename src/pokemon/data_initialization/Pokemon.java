@@ -4,7 +4,7 @@
 
 package pokemon.data_initialization;
 
-class Pokemon implements Comparable<Pokemon> {
+public class Pokemon implements Comparable<Pokemon> {
 	private final String name;
 	private String type1 = "";
 	private String type2 = "";

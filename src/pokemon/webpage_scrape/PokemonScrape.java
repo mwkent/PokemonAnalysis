@@ -1,7 +1,7 @@
 /*
  * Scrapes webpages and writes the pokemon data to the data/pokemonInfo.txt file.
  */
-package pokemon.data_initialization;
+package pokemon.webpage_scrape;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,14 +18,17 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-class WebpageScrape {
-	private final String statsurl = "http://bulbapedia.bulbagarden.net/wiki/List_of_Pok%C3%A9mon_by_base_stats_(Generation_VI-present)";
-	private final String typesUrl = "http://bulbapedia.bulbagarden.net/wiki/List_of_Pok%C3%A9mon_by_National_Pok%C3%A9dex_number";
+import pokemon.data_initialization.Emitter;
+import pokemon.data_initialization.Pokemon;
+
+class PokemonScrape {
+	private static final String STATS_URL = "http://bulbapedia.bulbagarden.net/wiki/List_of_Pok%C3%A9mon_by_base_stats_(Generation_VI-present)";
+	private static final String TYPES_URL = "http://bulbapedia.bulbagarden.net/wiki/List_of_Pok%C3%A9mon_by_National_Pok%C3%A9dex_number";
 	private final HashMap<String, Pokemon> data;
 	private final List<Pokemon> sortedData;
 	private static final File DATA_FILE = new File("data", "pokemonInfo");
 
-	public WebpageScrape() throws IOException {
+	public PokemonScrape() throws IOException {
 		data = getData();
 		setTypes();
 		sortedData = sortData();
@@ -33,7 +36,7 @@ class WebpageScrape {
 	}
 
 	private HashMap<String, Pokemon> getData() throws IOException {
-		Document doc = Jsoup.connect(statsurl).get();
+		Document doc = Jsoup.connect(STATS_URL).get();
 		Elements pokemonLines = doc.select("tr");
 
 		HashMap<String, Pokemon> map = new HashMap<String, Pokemon>();
@@ -109,7 +112,7 @@ class WebpageScrape {
 	}
 
 	private void setTypes() throws IOException {
-		Document doc = Jsoup.connect(typesUrl).get();
+		Document doc = Jsoup.connect(TYPES_URL).get();
 		Elements pokemonLines = doc.select("tr");
 
 		for (Element pokemonLine : pokemonLines) {
@@ -293,6 +296,6 @@ class WebpageScrape {
 	}
 
 	public static void main(String[] args) throws IOException {
-		new WebpageScrape();
+		new PokemonScrape();
 	}
 }

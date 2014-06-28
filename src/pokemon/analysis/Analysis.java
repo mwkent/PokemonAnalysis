@@ -141,7 +141,7 @@ public class Analysis {
 		List<String> attackAdvantages = new ArrayList<String>();
 		for (String attackType : attackTypes) {
 			List<String> superEffectiveTypes = data.getAttackingTA(attackType)
-					.get(2);
+					.get(3);
 			for (String superEffectiveType : superEffectiveTypes) {
 				if (!attackAdvantages.contains(superEffectiveType)) {
 					attackAdvantages.add(superEffectiveType);
@@ -303,20 +303,20 @@ public class Analysis {
 
 	public static void main(String[] args) throws IOException {
 		Analysis analysis = new Analysis();
-		analysis.printWeaknesses("gliscor");
-		List<String> attackAdvantages = new ArrayList<String>();
-		attackAdvantages.add("ghost");
-		attackAdvantages.add("grass");
-		attackAdvantages.add("fire");
-//		attackAdvantages.add("bug");
-		analysis.printAttackAdvantages(attackAdvantages);
-		List<String> team = new ArrayList<String>();
-		team.add("landorus (therian forme)");
-		team.add("thundurus (incarnate forme)");
-		team.add("talonflame");
-		team.add("tyranitar");
-		team.add("clefable");
-		team.add("aegislash (blade forme)");
-		analysis.printTeamWeaknesses(team);
+		analysis.printWeaknesses("noivern");
+		List<String> attackTypes = new ArrayList<String>();
+		attackTypes.add("dragon");
+		attackTypes.add("flying");
+		attackTypes.add("fire");
+		attackTypes.add("dark");
+		analysis.printAttackAdvantages(attackTypes);
+//		List<String> team = new ArrayList<String>();
+//		team.add("landorus (therian forme)");
+//		team.add("thundurus (incarnate forme)");
+//		team.add("talonflame");
+//		team.add("tyranitar");
+//		team.add("clefable");
+//		team.add("aegislash (blade forme)");
+//		analysis.printTeamWeaknesses(team);
 	}
 }

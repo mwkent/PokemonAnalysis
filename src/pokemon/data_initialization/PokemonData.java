@@ -15,7 +15,7 @@ class PokemonData {
 
 	private HashMap<String, Pokemon> parseData() throws FileNotFoundException {
 		HashMap<String, Pokemon> pokeData = new HashMap<String, Pokemon>();
-		File dataFile = new File("/Users/mattkent/pokemanzzz/Pokemon/data/pokemonInfo");
+		File dataFile = new File("/Users/mattkent/pokemanzzz/Pokemon Website/data/pokemonInfo");
 		Scanner scanner = new Scanner(dataFile);
 		while (scanner.hasNextLine()) {
 			String line = scanner.nextLine();
